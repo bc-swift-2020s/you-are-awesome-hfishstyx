@@ -7,53 +7,51 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     
-    var imageNumber = 0
-    var messageNumber = 0
+    var imageNumber = -1
+    var messageNumber = -1
     let totalNumberOfImages = 9
+    var audioPlayer = AVAudioPlayer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    
     @IBAction func messageButtonPressed(_ sender: Any) {
         let messages = ["You are awesome",
                         "You are great",
                         "You are cool",
                         "You are last"]
         
-        messageLabel.text = messages[Int.random(in:0...messages.count-1)]
-        imageView.image = UIImage(named: "image\(Int.random(in:0...totalNumberOfImages))")
-//        messageNumber += 1
-//        if messageNumber == messages.count {
-//            messageNumber = 0
-//
-//        let imageName = "image\(imageNumber)"
-//        imageView.image = UIImage (named: imageName)
-//        imageNumber = imageNumber + 1
-//        if imageNumber == 10 {
-//            imageNumber = 0
-//        }
-//        let awesomeMessage = "You are awesome"
-//        let greatMessage = "You are great"
-//
-//        if messageLabel.text == awesomeMessage {
-//            messageLabel.text = greatMessage
-//            imageView.image = UIImage (named: imageName)
-//        } else if messageLabel.text == greatMessage {
-//            messageLabel.text = "You are da bomb"
-//            imageView.image = UIImage (named: imageName)
-//        } else {
-//            messageLabel.text = awesomeMessage
-//            imageView.image = UIImage (named: imageName)
-//    }
-//
-//}
-//}
-}
+        var newMessageNumber: Int
+        repeat {
+            newMessageNumber = Int.random(in:0...messages.count-1)
+        } while messageNumber == newMessageNumber
+        messageNumber = newMessageNumber
+        messageLabel.text = messages[messageNumber]
+        
+        var newImageNumber: Int
+        repeat {
+            newImageNumber = Int.random(in:0...totalNumberOfImages)
+        } while imageNumber == newImageNumber
+        imageNumber = newImageNumber
+        imageView.image = UIImage(named: "image\(imageNumber)")
+        
+        if let sound = NSDataAsset(name: "sound1") {
+            do {
+                try  audioPlayer = AVAudioPlayer(data: sound.data)
+                audioPlayer.play()
+            } catch {
+                print("error: not initialized")
+            }
+        } else {
+            print("ERROR")
+        }
+    }
 }
